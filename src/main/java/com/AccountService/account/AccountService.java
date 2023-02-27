@@ -1,16 +1,22 @@
 package com.AccountService.account;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AccountService {
+@RequiredArgsConstructor
+public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
 
-    @Autowired
-    public AccountService(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return accountRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        "User with email " + email + " was not found"
+                ));
     }
-
 
 }
