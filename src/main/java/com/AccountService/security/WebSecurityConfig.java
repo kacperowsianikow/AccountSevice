@@ -23,12 +23,14 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/api/auth/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/auth/user/**").hasRole("USER")
-                .anyRequest().authenticated()
-                .and()
+                .csrf(csrf -> {
+                    csrf.disable();
+                })
+                .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers("/api/auth/admin/**").hasRole("ADMIN");
+                    auth.requestMatchers("/api/auth/user/**").hasRole("USER");
+                    auth.anyRequest().authenticated();
+                })
                 .httpBasic()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -39,8 +41,8 @@ public class WebSecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
-                .requestMatchers(HttpMethod.POST, "/api/auth/signup/**")
-                .requestMatchers(HttpMethod.GET, "/api/auth/signup/confirm/**");
+                .requestMatchers("/api/auth/signup/**")
+                .requestMatchers("/api/auth/signup/confirm/**");
     }
 
     @Bean

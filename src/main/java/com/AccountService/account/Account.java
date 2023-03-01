@@ -12,8 +12,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -44,7 +45,8 @@ public class Account implements UserDetails {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     @Enumerated(EnumType.STRING)
-    private AccountRole accountRole;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<AccountRole> accountRoles;
     private Boolean locked = false;
     private Boolean enabled = false;
 
@@ -52,19 +54,20 @@ public class Account implements UserDetails {
                    String lastname,
                    String email,
                    String password,
-                   AccountRole accountRole) {
+                   List<AccountRole> accountRoles) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.password = password;
-        this.accountRole = accountRole;
+        this.accountRoles = accountRoles;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(accountRole.name());
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        accountRoles.forEach(accountRole -> authorities.add(new SimpleGrantedAuthority(accountRole.toString())));
 
-        return Collections.singletonList(authority);
+        return authorities;
     }
 
     @Override

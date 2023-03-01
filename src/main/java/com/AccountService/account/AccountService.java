@@ -13,7 +13,7 @@ public class AccountService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return accountRepository.findByEmailIgnoreCase(email)
+        return accountRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         "User with email " + email + " was not found"
                 ));
