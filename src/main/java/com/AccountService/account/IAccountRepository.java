@@ -21,4 +21,13 @@ public interface IAccountRepository extends JpaRepository<Account, Long> {
     )
     void enableAccount(String email);
 
+    @Transactional
+    @Modifying
+    @Query(
+            "UPDATE Account a " +
+                    "SET a.password =?2 " +
+                    "WHERE a.email =?1"
+    )
+    void changePassword(String email, String newPassword);
+
 }

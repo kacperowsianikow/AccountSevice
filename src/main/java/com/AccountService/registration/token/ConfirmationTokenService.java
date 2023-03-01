@@ -9,29 +9,29 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ConfirmationTokenService {
-    private final ConfirmationTokenRepository confirmationTokenRepository;
+    private final IConfirmationTokenRepository IConfirmationTokenRepository;
 
     public void saveConfirmationToken(ConfirmationToken token) {
-        confirmationTokenRepository.save(token);
+        IConfirmationTokenRepository.save(token);
     }
 
     public Optional<ConfirmationToken> getToken(String token) {
-        return confirmationTokenRepository.findByToken(token);
+        return IConfirmationTokenRepository.findByToken(token);
     }
 
     public Optional<ConfirmationToken> getTokenByAccountId(Long accountId) {
-        return confirmationTokenRepository.findByAccountId(accountId);
+        return IConfirmationTokenRepository.findByAccountId(accountId);
     }
 
     public void setConfirmedAt(String token) {
-        confirmationTokenRepository.updateConfirmedAt(token, LocalDateTime.now());
+        IConfirmationTokenRepository.updateConfirmedAt(token, LocalDateTime.now());
     }
 
     public void updateToken(Long accountId,
                             LocalDateTime createdAt,
                             LocalDateTime expiresAt,
                             String token) {
-        confirmationTokenRepository.updateToken(accountId, createdAt, expiresAt, token);
+        IConfirmationTokenRepository.updateToken(accountId, createdAt, expiresAt, token);
     }
 
 }
