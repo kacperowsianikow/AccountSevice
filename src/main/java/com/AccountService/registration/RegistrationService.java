@@ -1,17 +1,16 @@
 package com.AccountService.registration;
 
 import com.AccountService.account.Account;
-import com.AccountService.account.AccountRepository;
 import com.AccountService.account.AccountRole;
-import com.AccountService.email.EmailSender;
+import com.AccountService.account.IAccountRepository;
+import com.AccountService.email.IEmailSender;
+import com.AccountService.registration.email.EmailTemplate;
 import com.AccountService.registration.token.ConfirmationToken;
 import com.AccountService.registration.token.ConfirmationTokenService;
 import com.AccountService.security.PasswordConfig;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -21,26 +20,18 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class RegistrationService {
-    private final EmailValidator emailValidator;
-    private final EmailSender emailSender;
+    private final IEmailSender IEmailSender;
     private final ConfirmationTokenService confirmationTokenService;
     private final PasswordConfig passwordConfig;
-    private final AccountRepository accountRepository;
+    private final IAccountRepository IAccountRepository;
     private static final String CONFIRMATION_LINK = "http://localhost:8080/api/auth/signup/confirm?token=";
     private static final int EXPIRATION_TIME = 15;
 
     public String register(RegistrationRequest request) {
         Optional<Account> accountByEmail =
-                accountRepository.findByEmail(request.getEmail());
+                IAccountRepository.findByEmail(request.getEmail());
 
         if (accountByEmail.isEmpty()) {
-            boolean isEmailValid = emailValidator.test(request.getEmail());
-            if (!isEmailValid) {
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST
-                );
-            }
-
             String encodedPassword =
                     passwordConfig.bCryptPasswordEncoder().encode(request.getPassword());
 
@@ -52,13 +43,13 @@ public class RegistrationService {
                     Collections.singletonList(AccountRole.ROLE_USER)
             );
 
-            accountRepository.save(account);
+            IAccountRepository.save(account);
 
             String token = generateToken(account);
 
             String link = CONFIRMATION_LINK + token;
 
-            emailSender.send(request.getEmail(), Email.createEmail(request.getFirstname(), link));
+            IEmailSender.send(request.getEmail(), EmailTemplate.createEmail(request.getFirstname(), link));
 
             return token;
         }
@@ -74,7 +65,7 @@ public class RegistrationService {
 
             String link = CONFIRMATION_LINK + token;
 
-            emailSender.send(request.getEmail(), Email.createEmail(request.getFirstname(), link));
+            IEmailSender.send(request.getEmail(), EmailTemplate.createEmail(request.getFirstname(), link));
 
             return token;
         }
@@ -131,7 +122,7 @@ public class RegistrationService {
 
         confirmationTokenService.setConfirmedAt(token);
 
-        accountRepository.enableAccount(
+        IAccountRepository.enableAccount(
                 confirmationToken.getAccount().getEmail()
         );
 

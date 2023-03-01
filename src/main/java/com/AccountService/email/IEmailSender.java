@@ -1,6 +1,6 @@
 package com.AccountService.email;
 
-public interface EmailSender {
+public interface IEmailSender {
     void send(String to, String email);
 
 }

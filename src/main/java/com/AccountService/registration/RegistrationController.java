@@ -1,7 +1,7 @@
 package com.AccountService.registration;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -10,7 +10,7 @@ public class RegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping("/api/auth/signup")
-    public String register(@RequestBody RegistrationRequest request) {
+    public String register(@Valid @RequestBody RegistrationRequest request) {
         return registrationService.register(request);
     }
 
@@ -25,7 +25,6 @@ public class RegistrationController {
     }
 
     @GetMapping("/api/auth/user/hello")
-    @PreAuthorize("hasRole('USER')")
     public String helloUser() {
         return "Hello User";
     }

@@ -2,11 +2,7 @@ package com.AccountService.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,25 +31,27 @@ public class Account implements UserDetails {
             generator = "account_sequence"
     )
     private Long id;
-    @NotBlank(message = "Field 'firstname' cannot be empty")
+    @NonNull
     private String firstname;
-    @NotBlank(message = "Field 'lastname' cannot be empty")
+    @NonNull
     private String lastname;
-    @NotBlank(message = "Field 'email' cannot be empty")
+    @NonNull
     private String email;
-    @NotBlank(message = "Field 'password' cannot be empty")
+    @NonNull
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)
     private List<AccountRole> accountRoles;
-    private Boolean locked = false;
-    private Boolean enabled = false;
+    private Boolean isAccountNonExpired = true;
+    private Boolean isAccountNonLocked = true;
+    private Boolean isCredentialsNonExpired = true;
+    private Boolean isEnabled = false;
 
-    public Account(String firstname,
-                   String lastname,
-                   String email,
-                   String password,
+    public Account(@NonNull String firstname,
+                   @NonNull String lastname,
+                   @NonNull String email,
+                   @NonNull String password,
                    List<AccountRole> accountRoles) {
         this.firstname = firstname;
         this.lastname = lastname;
@@ -71,7 +69,7 @@ public class Account implements UserDetails {
     }
 
     @Override
-    public String getPassword() {
+    public @NonNull String getPassword() {
         return password;
     }
 
@@ -82,22 +80,22 @@ public class Account implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return isAccountNonExpired;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return !locked;
+        return isAccountNonLocked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return isCredentialsNonExpired;
     }
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return isEnabled;
     }
 
     @Override
