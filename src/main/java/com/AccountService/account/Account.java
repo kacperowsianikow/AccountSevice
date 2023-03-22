@@ -41,7 +41,7 @@ public class Account implements UserDetails {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     @Enumerated(EnumType.STRING)
-    @ElementCollection(fetch = FetchType.EAGER)
+//    @ElementCollection(fetch = FetchType.EAGER)
     private List<AccountRole> accountRoles;
     private Boolean isAccountNonExpired = true;
     private Boolean isAccountNonLocked = true;

@@ -1,9 +1,10 @@
-package com.AccountService.registration;
+package com.AccountService.service;
 
 import com.AccountService.account.Account;
 import com.AccountService.account.AccountRole;
 import com.AccountService.account.IAccountRepository;
 import com.AccountService.email.IEmailSender;
+import com.AccountService.registration.RegistrationRequest;
 import com.AccountService.registration.email.EmailTemplate;
 import com.AccountService.registration.token.ConfirmationToken;
 import com.AccountService.registration.token.ConfirmationTokenService;
@@ -20,16 +21,16 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class RegistrationService {
-    private final IEmailSender IEmailSender;
+    private final IEmailSender iEmailSender;
     private final ConfirmationTokenService confirmationTokenService;
     private final PasswordConfig passwordConfig;
-    private final IAccountRepository IAccountRepository;
+    private final IAccountRepository iAccountRepository;
     private static final String CONFIRMATION_LINK = "http://localhost:8080/api/auth/signup/confirm?token=";
     private static final int EXPIRATION_TIME = 15;
 
     public String register(RegistrationRequest request) {
         Optional<Account> accountByEmail =
-                IAccountRepository.findByEmail(request.getEmail());
+                iAccountRepository.findByEmail(request.getEmail());
 
         if (accountByEmail.isEmpty()) {
             String encodedPassword =
@@ -43,13 +44,13 @@ public class RegistrationService {
                     Collections.singletonList(AccountRole.ROLE_USER)
             );
 
-            IAccountRepository.save(account);
+            iAccountRepository.save(account);
 
             String token = generateToken(account);
 
             String link = CONFIRMATION_LINK + token;
 
-            IEmailSender.send(request.getEmail(), EmailTemplate.createEmail(request.getFirstname(), link));
+            iEmailSender.send(request.getEmail(), EmailTemplate.createEmail(request.getFirstname(), link));
 
             return token;
         }
@@ -65,7 +66,7 @@ public class RegistrationService {
 
             String link = CONFIRMATION_LINK + token;
 
-            IEmailSender.send(request.getEmail(), EmailTemplate.createEmail(request.getFirstname(), link));
+            iEmailSender.send(request.getEmail(), EmailTemplate.createEmail(request.getFirstname(), link));
 
             return token;
         }
@@ -122,7 +123,7 @@ public class RegistrationService {
 
         confirmationTokenService.setConfirmedAt(token);
 
-        IAccountRepository.enableAccount(
+        iAccountRepository.enableAccount(
                 confirmationToken.getAccount().getEmail()
         );
 

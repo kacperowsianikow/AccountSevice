@@ -1,5 +1,6 @@
-package com.AccountService.email;
+package com.AccountService.service;
 
+import com.AccountService.email.IEmailSender;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;

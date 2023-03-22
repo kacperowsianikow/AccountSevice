@@ -1,6 +1,6 @@
 package com.AccountService.security;
 
-import com.AccountService.account.AccountService;
+import com.AccountService.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +27,7 @@ public class WebSecurityConfig {
                 })
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/api/auth/admin/**").hasRole("ADMIN");
+                    auth.requestMatchers("/api/auth/accountant/**").hasRole("ACCOUNTANT");
                     auth.requestMatchers("/api/auth/user/**").hasRole("USER");
                     auth.anyRequest().authenticated();
                 })

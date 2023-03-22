@@ -1,4 +1,4 @@
-package com.AccountService.edit;
+package com.AccountService.changepassword;
 
 import com.AccountService.registration.password.ValidPassword;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class PasswordRequest {
+public class ChangePasswordRequest {
     @ValidPassword
     private final String newPassword;
     private final String oldPassword;

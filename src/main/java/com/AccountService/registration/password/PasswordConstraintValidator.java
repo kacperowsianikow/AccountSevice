@@ -2,12 +2,10 @@ package com.AccountService.registration.password;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import lombok.SneakyThrows;
 import org.passay.*;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.StringJoiner;
 
 public class PasswordConstraintValidator implements ConstraintValidator<ValidPassword, String> {
 
