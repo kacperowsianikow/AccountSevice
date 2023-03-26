@@ -27,6 +27,7 @@ public class RegistrationService {
     private final IAccountRepository iAccountRepository;
     private static final String CONFIRMATION_LINK = "http://localhost:8080/api/auth/signup/confirm?token=";
     private static final int EXPIRATION_TIME = 15;
+    private static final String COMPANY_NAME = "Example Company";
 
     public String register(RegistrationRequest request) {
         Optional<Account> accountByEmail =
@@ -50,7 +51,11 @@ public class RegistrationService {
 
             String link = CONFIRMATION_LINK + token;
 
-            iEmailSender.send(request.getEmail(), EmailTemplate.createEmail(request.getFirstname(), link));
+            iEmailSender.send(request.getEmail(), EmailTemplate.createEmail(
+                    request.getFirstname(),
+                    link,
+                    COMPANY_NAME
+            ));
 
             return token;
         }
@@ -66,7 +71,11 @@ public class RegistrationService {
 
             String link = CONFIRMATION_LINK + token;
 
-            iEmailSender.send(request.getEmail(), EmailTemplate.createEmail(request.getFirstname(), link));
+            iEmailSender.send(request.getEmail(), EmailTemplate.createEmail(
+                    request.getFirstname(),
+                    link,
+                    COMPANY_NAME
+            ));
 
             return token;
         }

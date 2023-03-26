@@ -34,3 +34,7 @@ spring:
           connectiontimeout: 5000
           timeout: 3000
           writetimeout: 5000
+
+rsa:
+  public-key: classpath:certs/public.pem
+  private-key: classpath:certs/private.pem

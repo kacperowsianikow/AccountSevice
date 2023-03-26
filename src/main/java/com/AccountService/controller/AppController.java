@@ -6,8 +6,11 @@ import com.AccountService.payment.Payment;
 import com.AccountService.service.PaymentService;
 import com.AccountService.registration.RegistrationRequest;
 import com.AccountService.service.RegistrationService;
+import com.AccountService.service.TokenService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
